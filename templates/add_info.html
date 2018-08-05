@@ -1,0 +1,64 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <h1>Add Info </h1>
+  {% from "includes/_formhelpers.html" import render_field %}
+  <form method="POST" action="">
+    <div class="form-group">
+      {{render_field(form.org_name, class_="form-control")}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.contact_person, class_="form-control")}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.contact_email, type="email", class_="form-control")}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.contact_no, type="tel", placeholder="9988776655", pattern="^[0-9]{10}", class_="form-control")}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.address, class_="form-control")}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.state, class_="form-control")}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.pin_code, pattern="[0-9]{6}", class_="form-control")}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.city, class_="form-control")}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.country, class_="form-control")}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.GSTIN_number, pattern="^([0][1-9]|[1-2][0-9]|[3][0-5])([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+$",
+       placeholder="format : 22AAAAA0000A1Z5", title="format : 22AAAAA0000A1Z5", class_="form-control")}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.serial_key_2, class_="form-control")}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.package, pattern="^(Platinum|Silver|Gold|Diamond)$",
+       title="only allowed packages are : Platinum, Silver, Gold, Diamond",
+       placeholder="Silver",
+       class_="form-control")}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.tally)}}
+      {{render_field(form.busy)}}
+      {{render_field(form.openoffice)}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.username1, class_="form-control")}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.username2, class_="form-control")}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.username3, class_="form-control")}}
+    </div>
+    {{render_field(form.user_id, value=id.id ) }}
+      <p><input type="submit" class="btn btn-primary" value="Submit"></p>
+    </form>
+{% endblock %}

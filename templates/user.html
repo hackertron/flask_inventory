@@ -1,0 +1,67 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <h1>{{users.name}}</h1>
+  <small>Meet {{users.username}}</small>
+  <hr>
+  <div>
+    <h3>Contact info : {{users.email | safe}}</h3>
+    <h3> {{users.username}} Skills !!</h3></br>
+
+    <table class="table table-striped">
+    <tr>
+      <th>ID</th>
+      <th>Skill Name</th>
+      <th></th>
+    </tr>
+    {% for skill in skills %}
+      <tr>
+        <td>{{skill.id}}</td>
+        <td>{{skill.skill_name}}</td>
+        <td>
+        	{% if session.username != users.username %}
+          		<form action="{{url_for('endorsement', id=skill.id)}}" method="post">
+                <input type="hidden" name="_method" value="ENDORSE">
+                <input type="submit" value="Endorse" class="btn btn-success">
+              </form>
+          	{% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+  </div>
+
+   <div>
+      {% if session.username != users.username %}
+            <a class="btn btn-success" href="/add_recommendation/{{users.id}}"> Add Recommendations !!</a>
+      {% endif %}
+    </div>
+    <div>
+      <table class="table table-striped">
+    <tr>
+      <th>Recommonded by </th>
+      <th>Comments</th>
+    </tr>
+    {% for recom in recommendation %}
+      <tr>
+        <td>{{recom.author}}</td>
+        <td>{{recom.body}}</td>
+      </tr>  
+    {% endfor %}
+    </table>
+
+    </div>
+
+
+
+{% endblock %}
+
+
+
+<!-- 
+
+	<form action="{{url_for('endorse_skill', id=skill.id)}}" method="post">
+            <input type="hidden" name="_method" value="ENDORSE">
+            <input type="submit" value="Endorse" class="btn btn-success">
+          </form>
+ -->

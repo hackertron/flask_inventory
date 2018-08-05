@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <h1>Dashboard <small> Welcome {{session.username}}</small></h1>
+  {% if type.type == 'Admin' %}
+  <div class="col-sm-3 col-md-2 sidebar">
+         <ul class="nav nav-sidebar">
+           <li class="active"><a href="/dashboard">Overview <span class="sr-only">(current)</span></a></li>
+           <li><a href="/reports" target="_blank">Reports</a></li>
+           <li><a href="/packages" target="_blank">Packages</a></li>
+           <li><a href="/serial_key" target="_blank">Serial Keys</a></li>
+         </ul>
+         <ul class="nav nav-sidebar">
+           <li><a href="/distributors" target="_blank">Distributors</a></li>
+           <li><a href="/dealer" target="_blank">Dealer</a></li>
+           <li><a href="/stock_issue" target="_blank">Stock Issue</a></li>
+           <li><a href="/clients" target="_blank">Clients</a></li>
+           <li><a href="/search">Search</a></li>
+         </ul>
+    </div>
+  {% endif %}
+    <div class="main">
+      <p> Available Stocks </p>
+      <p> Distributor </p>
+      <p> Dealer </p>
+      <p> Clients </p>
+    </div>
+
+{% endblock %}
+
+
+<script type="text/javascript">
+$(function(){
+    $("#nav_page_a").click(function(e){
+        e.preventDefault(); //To prevent the default anchor tag behaviour
+        var url = this.href;
+        $(".main").load(url);
+    });
+});
+</script>
