@@ -9,8 +9,8 @@
 
 # how to setup database
 
-```use sql file and import it in phpmyadmin or just do it via CLI
-```
+- sql file and import it in phpmyadmin or just do it via CLI
+
 
 # run
 python app.py
