@@ -332,16 +332,103 @@ def endorsement(id):
 @is_logged_in
 def serial_key():
 	if request.method == 'POST':
-		key1 = request.form['key1']
-		key2 = request.form['key2']
-		package = request.form['package']
+		key1 = escape(request.form['key1'])
+		key2 = escape(request.form['key2'])
+		package = escape(request.form['package'])
 		print(key1,file=sys.stderr)
 		print(key2,file=sys.stderr)
 		print(package,file=sys.stderr)
+
+		# create cursor
+		cur = mysql.connection.cursor()
+
+		# execute query
+		cur.execute("INSERT INTO serial_keys (key1, key2, package) VALUES(%s, %s, %s)",(key1, key2, package))
+
+		# commit to DB
+		mysql.connection.commit()
+
+		# close Connection
+		cur.close()
+
 		flash('Keys added successfully', 'success')
 		return redirect('/dashboard')
 	else:
 		return render_template('serial_key.html')
+
+
+# add distributors
+@app.route('/distributors', methods=['GET', 'POST'])
+@is_logged_in
+def distributors():
+    form = RegisterForm(request.form)
+    if request.method == 'POST' and form.validate():
+        name = form.name.data
+        email = form.email.data
+        username = form.username.data
+        password = sha256_crypt.encrypt(str(form.password.data))
+        type = 'Distributor'
+
+        # Create cursor
+        cur = mysql.connection.cursor()
+
+        # Execute query
+        cur.execute("INSERT INTO users(name, email, username, password, type) VALUES(%s, %s, %s, %s, %s)", (name, email, username, password, type))
+
+        # Commit to DB
+        mysql.connection.commit()
+        # fetch id of the newly addeded user
+        result = cur.execute("SELECT id FROM users WHERE email = %s", [email])
+        if result > 0:
+            id = cur.fetchone()
+            print(id['id'],file=sys.stderr)
+
+        # Close connection
+        cur.close()
+
+        flash('Add additional info to complete your registration', 'danger')
+
+        return redirect(url_for('add_info', id=id['id']))
+    return render_template('dist.html', form=form)
+
+
+
+# add Dealer
+@app.route('/dealer', methods=['GET', 'POST'])
+@is_logged_in
+def dealer():
+    form = RegisterForm(request.form)
+    if request.method == 'POST' and form.validate():
+        name = form.name.data
+        email = form.email.data
+        username = form.username.data
+        password = sha256_crypt.encrypt(str(form.password.data))
+        type = 'Dealer'
+
+        # Create cursor
+        cur = mysql.connection.cursor()
+
+        # Execute query
+        cur.execute("INSERT INTO users(name, email, username, password, type) VALUES(%s, %s, %s, %s, %s)", (name, email, username, password, type))
+
+        # Commit to DB
+        mysql.connection.commit()
+        # fetch id of the newly addeded user
+        result = cur.execute("SELECT id FROM users WHERE email = %s", [email])
+        if result > 0:
+            id = cur.fetchone()
+            print(id['id'],file=sys.stderr)
+
+        # Close connection
+        cur.close()
+
+        flash('Add additional info to complete your registration', 'danger')
+
+        return redirect(url_for('add_info', id=id['id']))
+    return render_template('deal.html', form=form)
+
+
+
 
 # Add Recommendation
 @app.route('/add_recommendation/<string:id>', methods=['GET', 'POST'])
