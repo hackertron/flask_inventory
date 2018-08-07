@@ -327,6 +327,22 @@ def endorsement(id):
 
 
 
+# Add Serial Keys
+@app.route('/serial_key', methods=['GET','POST'])
+@is_logged_in
+def serial_key():
+	if request.method == 'POST':
+		key1 = request.form['key1']
+		key2 = request.form['key2']
+		package = request.form['package']
+		print(key1,file=sys.stderr)
+		print(key2,file=sys.stderr)
+		print(package,file=sys.stderr)
+		flash('Keys added successfully', 'success')
+		return redirect('/dashboard')
+	else:
+		return render_template('serial_key.html')
+
 # Add Recommendation
 @app.route('/add_recommendation/<string:id>', methods=['GET', 'POST'])
 @is_logged_in
