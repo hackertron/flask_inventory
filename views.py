@@ -432,7 +432,9 @@ def dealer():
 @app.route('/stock_issue', methods=['GET','POST'])
 @is_logged_in
 def stock_issue():
-	
+
+	return render_template('stock_issue.html')
+
 
 
 # Add Recommendation
