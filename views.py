@@ -432,8 +432,37 @@ def dealer():
 @app.route('/stock_issue', methods=['GET','POST'])
 @is_logged_in
 def stock_issue():
+	if request.method == 'POST':
+		# do some shit here
+		issue_to = escape(request.form['issue_to'])
+		package = escape(request.form['package'])
+		single_key = escape(request.form['single_key'])
+		key_range = escape(request.form['key_range'])
+		multiple_key = escape(request.form['multiple_key'])
 
-	return render_template('stock_issue.html')
+		# Create Cursor
+		cur = mysql.connection.cursor()
+		# execute
+		cur.execute('''INSERT INTO issued_stock(issue_to, package, single_key,
+		key_range, multiple_key) VALUES(%s, %s, %s, %s, %s)''',(issue_to, package,
+		single_key, key_range, multiple_key))
+		# commit to DB
+		mysql.connection.commit()
+		# Close
+		cur.close()
+		flash('Stocks issued successfully', 'success')
+		return redirect('/dashboard')
+	else :
+		# create Cursor
+		cur = mysql.connection.cursor()
+
+		# get usernames of Distributor and Dealer
+		result = cur.execute("SELECT * FROM users WHERE type = 'Distributor' or type = 'Dealer' ORDER BY username")
+		if result > 0:
+			users = cur.fetchall()
+			return render_template('stock_issue.html',users=users)
+
+		return render_template('stock_issue.html')
 
 
 

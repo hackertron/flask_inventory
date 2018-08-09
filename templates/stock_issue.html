@@ -1,21 +1,36 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <h1>Issue Stocks </h1>
+  <h1>Issue Stocks to Distributor/Dealer</h1>
   <form method="POST" action="">
     <div class="form-group">
-      <label for "key1">key1: </label>
-      <input type="text" name="key1">
-    </div>
-    <div class="form-group">
-      <label for "key2">key2: </label>
-      <input type="text" name="key2">
+      <label for "issue_to"> Select Distributor/Dealer</label>
+      <select name = "issue_to">
+        {% for user in users %}
+        <option value="{{user.id}}">{{user.username}}</option>
+        {% endfor %}
+      </select>
     </div>
     <div class="form-group">
       <label for "Package">package: </label>
-      <input type="text" name="package" pattern="^(Platinum|Silver|Gold|Diamond)$"
-       title="only allowed packages are : Platinum, Silver, Gold, Diamond"
-       placeholder="Silver">
+      <select name = "package">
+        <option value="Silver">Silver</option>
+        <option value="Platinum">Platinum</option>
+        <option value="Gold">Gold</option>
+        <option value="Diamond">Diamond</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for "single_key">Single Key: </label>
+      <input type="text" name="single_key">
+    </div>
+    <div class="form-group">
+      <label for "key_range">Key Range: </label>
+      <input type="text" name="key_range" placeholder="20001-20005">
+    </div>
+    <div class="form-group">
+      <label for "multiple_key">Multiple Keys: </label>
+      <input type="text" name="multiple_key" placeholder="10001, 10003, 10005">
     </div>
     <p><input class="btn btn-primary" type="submit" value="Submit">
   </form>
