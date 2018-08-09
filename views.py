@@ -428,6 +428,11 @@ def dealer():
     return render_template('deal.html', form=form)
 
 
+# stock Issue
+@app.route('/stock_issue', methods=['GET','POST'])
+@is_logged_in
+def stock_issue():
+	
 
 
 # Add Recommendation
