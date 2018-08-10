@@ -6,6 +6,10 @@ from flask import  render_template, request, flash, redirect, url_for, session, 
 from flask import escape
 from passlib.hash import sha256_crypt
 import sys
+from io import StringIO  # allows you to store response object in memory instead of on disk
+import csv
+from flask import Flask, make_response
+
 #home
 @app.route('/')
 def index():
@@ -463,6 +467,30 @@ def stock_issue():
 			return render_template('stock_issue.html',users=users)
 
 		return render_template('stock_issue.html')
+
+
+# Reports
+@app.route('/reports', methods=['GET'])
+@is_logged_in
+def reports():
+	cur = mysql.connection.cursor()
+	cur.execute("SELECT * FROM users")
+	rows = cur.fetchall()
+	si = StringIO()
+	csv_columns = [i[0] for i in cur.description]
+	cw = csv.DictWriter(si,fieldnames=csv_columns)
+	cw.writeheader()
+
+	#print(rows,file=sys.stderr)
+	#cw.writerow([i[0] for i in cur.description])
+	for row in rows:
+		cw.writerow(row)
+		print(row,file=sys.stderr)
+	cw.writerows(rows)
+	response = make_response(si.getvalue())
+	response.headers['Content-Disposition'] = 'attachment; filename=report.csv'
+	response.headers["Content-type"] = "text/csv"
+	return response
 
 
 
