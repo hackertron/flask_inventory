@@ -469,20 +469,38 @@ def stock_issue():
 		return render_template('stock_issue.html')
 
 
+#
+
 # Reports
+@app.route('/reports/<int:id>/', methods=['GET'])
 @app.route('/reports', methods=['GET'])
 @is_logged_in
-def reports():
+def reports(id=None):
+	if id == None:
+		return render_template('reports.html')
+	query = "SELECT * FROM users"
+	if id == 1:
+		query = "SELECT * FROM users"
+	elif id == 2:
+		query = "SELECT * FROM user_info"
+	elif id == 3:
+		query = "SELECT * FROM serial_keys"
+	elif id == 4:
+		query = "SELECT * FROM issued_stock"
+	elif id == 5:
+		query = "SELECT * FROM packages"
+	else :
+		return render_template('404.html')
+
 	cur = mysql.connection.cursor()
-	cur.execute("SELECT * FROM users")
+	cur.execute(query)
 	rows = cur.fetchall()
 	si = StringIO()
 	csv_columns = [i[0] for i in cur.description]
 	cw = csv.DictWriter(si,fieldnames=csv_columns)
 	cw.writeheader()
 
-	#print(rows,file=sys.stderr)
-	#cw.writerow([i[0] for i in cur.description])
+
 	for row in rows:
 		cw.writerow(row)
 		print(row,file=sys.stderr)
