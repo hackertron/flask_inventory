@@ -297,39 +297,6 @@ def delete_skill(id):
 
     return redirect(url_for('dashboard'))
 
-# add endorsement
-@app.route('/endorsement/<string:id>', methods=['POST'])
-@is_logged_in
-def endorsement(id):
-    #Create cursor
-    cur = mysql.connection.cursor()
-
-    #get users id
-    result = cur.execute("SELECT id FROM users WHERE username = %s", [session['username']])
-    endorsed_by_id = cur.fetchone()
-    result = cur.execute("SELECT * FROM skills WHERE id =%s",[id])
-    endorsed_to_id = cur.fetchone()
-
-    print("endorsed by %s",endorsed_by_id['id'],file=sys.stderr)
-    print("endorsed to %s",endorsed_to_id['has_skill'],file=sys.stderr)
-
-    # insert in endorsement table
-    cur.execute("INSERT INTO endorsement (endorsed_by, endorsed_to, skill) VALUES(%s, %s, %s)",[endorsed_by_id['id'], endorsed_to_id['has_skill'], endorsed_to_id['id']])
-
-    #Commit to DB
-    mysql.connection.commit()
-
-    #Close Connection
-    cur.close()
-
-    flash('Endorsement added', 'success')
-
-    #Redirect
-    redirect_to = "/profile/{}".format(endorsed_to_id['has_skill'])
-    print(redirect_to,file=sys.stderr)
-    return redirect(redirect_to)
-
-
 
 # Add Serial Keys
 @app.route('/serial_key', methods=['GET','POST'])
@@ -451,6 +418,12 @@ def stock_issue():
 		key_range, multiple_key) VALUES(%s, %s, %s, %s, %s)''',(issue_to, package,
 		single_key, key_range, multiple_key))
 		# commit to DB
+		mysql.connection.commit()
+
+		# update package table
+		cur.execute("UPDATE packages SET users_count = users_count + 1 WHERE name = %s", [package])
+
+		#commit to DB
 		mysql.connection.commit()
 		# Close
 		cur.close()
